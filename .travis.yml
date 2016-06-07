@@ -2,6 +2,8 @@ sudo: required
 
 language: generic
 
+install: true
+
 services:
   - docker
 
