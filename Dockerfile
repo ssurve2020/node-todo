@@ -1,9 +1,9 @@
 ## BUILDING
 ##   (from project root directory)
-##   $ docker build -t prydonius-node-todo .
+##   $ docker build -t node-js-for-prydonius-node-todo .
 ##
 ## RUNNING
-##   $ docker run -p 3000:3000 prydonius-node-todo
+##   $ docker run -p 3000:3000 node-js-for-prydonius-node-todo
 ##
 ## CONNECTING
 ##   Lookup the IP of your active docker host using:
@@ -11,20 +11,21 @@
 ##   Connect to the container at DOCKER_IP:3000
 ##     replacing DOCKER_IP for the IP of your active docker host
 
-FROM gcr.io/stacksmith-images/debian-buildpack:wheezy-r07
+FROM gcr.io/stacksmith-images/minideb-buildpack:jessie-r3
 
 MAINTAINER Bitnami <containers@bitnami.com>
 
-ENV STACKSMITH_STACK_ID="28u9z8n" \
-    STACKSMITH_STACK_NAME="prydonius/node-todo" \
+ENV STACKSMITH_STACK_ID="mzuy5q3" \
+    STACKSMITH_STACK_NAME="Node.js for prydonius/node-todo" \
     STACKSMITH_STACK_PRIVATE="1"
 
-RUN bitnami-pkg install node-6.2.0-1 --checksum 94805fccddfc7f4892ba21b816abd73ee3a1221c7e9d2fa045669e180f3d824b
+RUN bitnami-pkg install node-6.9.1-0 --checksum a16ddf7062d09d932b46bf95763d9e3e473f278cebc64161f44fed0e04b6463d
 
 ENV PATH=/opt/bitnami/node/bin:/opt/bitnami/python/bin:$PATH \
     NODE_PATH=/opt/bitnami/node/lib/node_modules
 
 ## STACKSMITH-END: Modifications below this line will be unchanged when regenerating
+
 
 # ExpressJS template
 COPY . /app
