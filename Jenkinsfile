@@ -70,9 +70,10 @@ pipeline {
       }
 
       steps {
-        input 'Deploy to Production?'
         // Prevent any older builds from deploying to production
         milestone(1)
+        input 'Deploy to Production?'
+        milestone(2)
       }
     }
     stage('Production Deployment') {
