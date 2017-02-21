@@ -19,6 +19,11 @@ pipeline {
       }
     }
     stage('Deploy') {
+      environment {
+        RELEASE_NAME = 'todos-staging'
+        SERVER_HOST = 'todos.staging.k8s.prydoni.us'
+      }
+
       steps {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub',
           usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD']]) {
@@ -26,11 +31,6 @@ pipeline {
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
             docker push $IMAGE_NAME:$BUILD_ID
           '''
-        }
-
-        environment {
-          RELEASE_NAME = 'todos-staging'
-          SERVER_HOST = 'todos.staging.k8s.prydoni.us'
         }
 
         sh '''
