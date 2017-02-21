@@ -26,6 +26,10 @@ pipeline {
     stage('Image Release') {
       agent any
 
+      when {
+        expression { env.BRANCH_NAME == 'master' }
+      }
+
       steps {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub',
           usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD']]) {
@@ -38,6 +42,10 @@ pipeline {
     }
     stage('Staging Deployment') {
       agent any
+
+      when {
+        expression { env.BRANCH_NAME == 'master' }
+      }
 
       environment {
         RELEASE_NAME = 'todos-staging'
@@ -57,6 +65,10 @@ pipeline {
       }
     }
     stage('Deploy to Production?') {
+      when {
+        expression { env.BRANCH_NAME == 'master' }
+      }
+
       steps {
         input 'Deploy to Production?'
         // Prevent any older builds from deploying to production
@@ -65,6 +77,10 @@ pipeline {
     }
     stage('Production Deployment') {
       agent any
+
+      when {
+        expression { env.BRANCH_NAME == 'master' }
+      }
 
       environment {
         RELEASE_NAME = 'todos-production'
