@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+  agent none
 
   environment {
     IMAGE_NAME = 'prydonius/node-todo'
@@ -9,20 +9,22 @@ pipeline {
 
   stages {
     stage('Build') {
+      agent any
+
       steps {
+        checkout scm
         sh 'docker build -t $IMAGE_NAME:$BUILD_ID .'
       }
     }
     stage('Test') {
+      agent any
+
       steps {
         echo 'TODO: add tests'
       }
     }
-    stage('Deploy') {
-      environment {
-        RELEASE_NAME = 'todos-staging'
-        SERVER_HOST = 'todos.staging.k8s.prydoni.us'
-      }
+    stage('Image Release') {
+      agent any
 
       steps {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'dockerhub',
@@ -32,7 +34,44 @@ pipeline {
             docker push $IMAGE_NAME:$BUILD_ID
           '''
         }
+      }
+    }
+    stage('Staging Deployment') {
+      agent any
 
+      environment {
+        RELEASE_NAME = 'todos-staging'
+        SERVER_HOST = 'todos.staging.k8s.prydoni.us'
+      }
+
+      steps {
+        sh '''
+          curl -O $HELM_URL/$HELM_TARBALL
+          tar xzfv $HELM_TARBALL -C /home/jenkins && rm $HELM_TARBALL
+          PATH=/home/jenkins/linux-amd64/:$PATH
+          helm init --client-only
+
+          helm dependencies build ./helm/todo
+          helm upgrade $RELEASE_NAME ./helm/todo --set image.tag=$BUILD_ID,ingress.host=$SERVER_HOST
+        '''
+      }
+    }
+    stage('Deploy to Production?') {
+      steps {
+        input 'Deploy to Production?'
+        // Prevent any older builds from deploying to production
+        milestone(1)
+      }
+    }
+    stage('Production Deployment') {
+      agent any
+
+      environment {
+        RELEASE_NAME = 'todos-production'
+        SERVER_HOST = 'todos.k8s.prydoni.us'
+      }
+
+      steps {
         sh '''
           curl -O $HELM_URL/$HELM_TARBALL
           tar xzfv $HELM_TARBALL -C /home/jenkins && rm $HELM_TARBALL
