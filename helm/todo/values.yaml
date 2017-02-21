@@ -19,19 +19,6 @@ resources:
   #   cpu: 100m
   #   memory: 128Mi
 ingress:
-  hosts:
-  # Wildcard
-  -
-  # - monocular.local
-
-  ## Ingress annotations
-  ##
-  annotations:
-  #   kubernetes.io/ingress.class: nginx
-  #   kubernetes.io/tls-acme: 'true'
-
-  ## Ingress TLS configuration
-  ## Secrets must be manually created in the namespace
-  ##
-  # tls:
-  #   secretName: monocular.local-tls
+  host: todos.local
+  # Enable automatic TLS with Let's Encrypt
+  tls: false
