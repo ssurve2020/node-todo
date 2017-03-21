@@ -52,7 +52,7 @@ pipeline {
 
       steps {
         sh '''
-          source ./helm/helm-init.sh
+          . ./helm/helm-init.sh
           helm dependencies build ./helm/todo
           helm upgrade --install $RELEASE_NAME ./helm/todo --set image.tag=$BUILD_ID,ingress.host=$SERVER_HOST
         '''
@@ -84,7 +84,7 @@ pipeline {
 
       steps {
         sh '''
-          source ./helm/helm-init.sh
+          . ./helm/helm-init.sh
           helm dependencies build ./helm/todo
           helm upgrade --install $RELEASE_NAME ./helm/todo --set image.tag=$BUILD_ID,ingress.host=$SERVER_HOST
         '''
