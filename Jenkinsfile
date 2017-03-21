@@ -54,7 +54,7 @@ pipeline {
         sh '''
           . ./helm/helm-init.sh
           helm dependencies build ./helm/todo
-          helm upgrade --install $RELEASE_NAME ./helm/todo --set image.tag=$BUILD_ID,ingress.host=$SERVER_HOST
+          helm upgrade --install --namespace staging $RELEASE_NAME ./helm/todo --set image.tag=$BUILD_ID,ingress.host=$SERVER_HOST
         '''
       }
     }
@@ -86,7 +86,7 @@ pipeline {
         sh '''
           . ./helm/helm-init.sh
           helm dependencies build ./helm/todo
-          helm upgrade --install $RELEASE_NAME ./helm/todo --set image.tag=$BUILD_ID,ingress.host=$SERVER_HOST
+          helm upgrade --install --namespace production $RELEASE_NAME ./helm/todo --set image.tag=$BUILD_ID,ingress.host=$SERVER_HOST
         '''
       }
     }
