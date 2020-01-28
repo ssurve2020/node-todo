@@ -10,4 +10,4 @@ services:
     restart: always
 
   mongodb:
-    image: bitnami/mongodb
+    image: bitnami/mongodb:4.2.3-r2

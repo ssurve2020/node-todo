@@ -1,4 +1,4 @@
-FROM bitnami/node:7.5.0-r0
+FROM bitnami/node:12.14.1-debian-10-r3
 
 COPY . /app
 
